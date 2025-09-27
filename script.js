@@ -1,12 +1,8 @@
-// Global variables and constants
-localStorage.clear();  
 const STORAGE_KEY = 'studyPlanner_data';
 const AUTH_KEY = 'studyPlanner_auth';
 let tasks = [];
 let currentUser = null;
-let currentCalendarDate = new Date(); // Start with the current week
-
-// DOM Elements
+let currentCalendarDate = new Date(); 
 const plannerContainer = document.getElementById('planner-container');
 const authModalEl = document.getElementById('auth-modal');
 const taskModalEl = document.getElementById('task-modal');
@@ -19,20 +15,50 @@ const welcomeMessageEl = document.getElementById('welcome-message');
 const importFileEl = document.getElementById('import-file');
 const calendarStartDateEl = document.getElementById('calendar-start-date');
 const loadingSpinnerEl = document.getElementById('loading-spinner');
-
-// NEW DOM Elements for Edit Mode
 const editingTaskIdEl = document.getElementById('editing-task-id');
 const addTaskSubmitBtn = document.getElementById('add-task-submit');
 const editTaskActionsDiv = document.getElementById('edit-task-actions');
 const cancelEditBtn = document.getElementById('cancel-edit-btn');
+const updateBtn = document.getElementById("update-task-submit");
+const addBtn = document.getElementById("add-task-submit");
+const editingTaskIdInput = document.getElementById("editing-task-id");
+updateBtn.addEventListener("click", function (e) {
+    e.preventDefault();
+    const taskId = editingTaskIdInput.value;
+    if (!taskId) return;
+    const subject = document.getElementById("subject").value.trim();
+    const taskDesc = document.getElementById("task").value.trim();
+    const startDate = document.getElementById("start-date").value;
+    const dueDate = document.getElementById("due-date").value;
+    const priority = document.getElementById("priority").value;
+    let tasks = JSON.parse(localStorage.getItem("tasks")) || [];
+    tasks = tasks.map(task => {
+        if (task.id === taskId) {
+            return { ...task, subject, task: taskDesc, startDate, dueDate, priority };
+        }
+        return task;
+    });
+    localStorage.setItem("tasks", JSON.stringify(tasks));
+    renderTaskList();
+    taskForm.reset();
+    editingTaskIdInput.value = "";
+    updateBtn.style.display = "none";
+    addBtn.style.display = "block";
+    cancelEditBtn.style.display = "none";
+    showToast("Task updated successfully!");
+});
 
-// Bootstrap Modal Instances (for easy control)
+cancelEditBtn.addEventListener("click", function () {
+    taskForm.reset();
+    editingTaskIdInput.value = "";
+    updateBtn.style.display = "none";
+    addBtn.style.display = "block";
+    cancelEditBtn.style.display = "none";
+});
 const authModal = new bootstrap.Modal(authModalEl);
 const taskModal = new bootstrap.Modal(taskModalEl);
 
 let currentEditingTaskId = null;
-
-// --- Utility Functions ---
 function showToast(title, body, type = 'success') {
     const toastEl = document.getElementById('toast');
     document.getElementById('toast-title').textContent = title;
@@ -56,7 +82,6 @@ function toggleSpinner(isVisible) {
     loadingSpinnerEl.style.display = isVisible ? 'block' : 'none';
 }
 
-// --- Local Storage & Data Management ---
 function loadData() {
     const storedAuth = JSON.parse(localStorage.getItem(AUTH_KEY) || '{}');
     const storedTasks = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
@@ -89,7 +114,6 @@ function initializeData() {
     }
 }
 
-// --- Authentication Logic ---
 function handleSignUp() {
     const username = document.getElementById('auth-username').value.trim();
     const password = document.getElementById('auth-password').value;
@@ -149,7 +173,6 @@ function handleLogout() {
     setTimeout(() => location.reload(), 500);
 }
 
-// --- Task Management ---
 function setFormDateLimits() {
     const today = formatDate(new Date());
     document.getElementById('start-date').min = today;
@@ -293,48 +316,61 @@ function handleDeleteTask(){
 }
 
 // --- Calendar and Progress ---
-function renderCalendar(startDate=new Date()){
-    calendarEl.innerHTML='';
-    const today=new Date();
-    today.setHours(0,0,0,0);
-    const day=startDate.getDay();
-    const diff=startDate.getDate()-day+(day===0?-6:1);
-    const weekStart=new Date(startDate.setDate(diff));
+function renderCalendar(startDate = new Date()) {
+    calendarEl.innerHTML = '';
+    const today = new Date(); today.setHours(0,0,0,0);
+    const day = startDate.getDay();
+    const diff = startDate.getDate() - day + (day === 0 ? -6 : 1);
+    const weekStart = new Date(startDate.setDate(diff)); 
     weekStart.setHours(0,0,0,0);
-    currentCalendarDate=new Date(weekStart);
-    calendarStartDateEl.value=formatDate(weekStart);
-
-    const dayNames=['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+    currentCalendarDate = new Date(weekStart);
+    calendarStartDateEl.value = formatDate(weekStart);
+    const dayNames = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
     for(let i=0;i<7;i++){
-        const date=new Date(weekStart);
+        const date = new Date(weekStart); 
         date.setDate(weekStart.getDate()+i);
-        const dateString=formatDate(date);
-        const dayTasks=tasks.filter(t=> {
-            const dStart=formatDate(t.startDate), dEnd=formatDate(t.dueDate);
-            return dateString>=dStart && dateString<=dEnd;
-        }).filter(t=>!t.completed);
-
-        const isToday=date.getTime()===today.getTime();
-        const dayDiv=document.createElement('div');
-        dayDiv.className=`calendar-day ${isToday?'today':''} ${dayTasks.length>0?'has-tasks':''}`;
+        date.setHours(0,0,0,0);
+        const dateString = formatDate(date);
+        const dayTasks = tasks.filter(t => {
+            const s = new Date(t.startDate); s.setHours(0,0,0,0);
+            const d = new Date(t.dueDate); d.setHours(0,0,0,0);
+            return date.getTime() >= s.getTime() && date.getTime() <= d.getTime() && !t.completed;
+        });
+        const isToday = date.getTime() === today.getTime();
+        const dayDiv = document.createElement('div');
+        dayDiv.className = `calendar-day ${isToday?'today':''} ${dayTasks.length>0?'has-tasks':''}`;
         dayDiv.setAttribute('role','gridcell');
-
-        let taskSummary='';
-        if(dayTasks.length===1) taskSummary=dayTasks[0].subject.substring(0,10)+(dayTasks[0].subject.length>10?'...':'');
-        else if(dayTasks.length>1) taskSummary=`${dayTasks.length} tasks`;
+        let taskSummary = '';
+        if(dayTasks.length===1) taskSummary = dayTasks[0].subject.substring(0,10)+(dayTasks[0].subject.length>10?'...':'');
+        else if(dayTasks.length>1) taskSummary = `${dayTasks.length} tasks`;
         else taskSummary='No tasks';
 
         dayDiv.innerHTML=`<strong>${dayNames[i]}</strong><div>${date.getDate()}</div><div class="task-count text-muted">${taskSummary}</div>`;
 
         dayDiv.addEventListener('click',()=>{
             if(dayTasks.length>0){
-                const summary=dayTasks.map(t=>`<li>${t.subject} (${t.priority}) - ${formatDate(t.startDate)} to ${formatDate(t.dueDate)}</li>`).join('');
+                const summary = dayTasks.map(t=>`<li>${t.subject} (${t.priority}) - Due: ${formatDate(t.dueDate)}</li>`).join('');
                 showToast(`Tasks for ${dayNames[i]}, ${date.getDate()}`, `<ul>${summary}</ul>`,'info');
-            }else showToast(`Tasks for ${dayNames[i]}, ${date.getDate()}`,'No incomplete tasks scheduled for this day.','info');
+            }else{
+                showToast(`Tasks for ${dayNames[i]}, ${date.getDate()}`, 'No incomplete tasks scheduled for this day.','info');
+            }
         });
+
         calendarEl.appendChild(dayDiv);
     }
 }
+document.getElementById('prev-week').addEventListener('click',()=>{
+    currentCalendarDate.setDate(currentCalendarDate.getDate() - 7);
+    renderCalendar(currentCalendarDate);
+});
+document.getElementById('next-week').addEventListener('click',()=>{
+    currentCalendarDate.setDate(currentCalendarDate.getDate() + 7);
+    renderCalendar(currentCalendarDate);
+});
+calendarStartDateEl.addEventListener('change',(e)=>{
+    const newDate = new Date(e.target.value);
+    renderCalendar(newDate);
+});
 
 function renderProgress(){
     const totalTasks=tasks.length;
@@ -346,9 +382,6 @@ function renderProgress(){
     else if(percentage<66) progressBarEl.className='progress-bar bg-warning';
     else progressBarEl.className='progress-bar bg-success';
 }
-
-
-// --- Initialization ---
 document.addEventListener('DOMContentLoaded',()=>{
     initializeData();
     document.getElementById('login-btn').addEventListener('click',handleLogin);
@@ -359,9 +392,6 @@ document.addEventListener('DOMContentLoaded',()=>{
     document.getElementById('edit-task-btn').addEventListener('click',handleEditTask);
     document.getElementById('close-modal').addEventListener('click',()=>taskModal.hide());
     cancelEditBtn.addEventListener('click',resetFormState);
-    
-
-    // Calendar Navigation
     document.getElementById('prev-week').addEventListener('click',()=>{
         currentCalendarDate.setDate(currentCalendarDate.getDate()-7);
         renderCalendar(currentCalendarDate);
