@@ -19,7 +19,6 @@
     --transition-slow: 0.3s ease;
 }
 
-/* GLOBAL */
 body {
     background-color: var(--color-bg-body);
     color: var(--color-text);
@@ -32,13 +31,11 @@ body {
     opacity: 0.8;
 }
 
-/* HEADERS */
 h1, h2, h5 {
     color: var(--color-primary);
     font-family: 'Poppins', sans-serif;
 }
 
-/* WELCOME */
 #welcome-message {
     font-weight: bold;
     color: var(--color-primary);
@@ -47,7 +44,6 @@ h1, h2, h5 {
     font-size: 1.1rem;
 }
 
-/* BUTTONS */
 .btn {
     background-color: var(--color-primary);
     color: #fff;
@@ -68,10 +64,30 @@ h1, h2, h5 {
     padding: 0.25rem 0.5rem;
 }
 
-/* TASKS */
 #task-list {
     max-height: 600px;
     overflow-y: auto;
+}
+
+#task-form-actions .btn {
+    min-height: 44px;
+    border-radius: 6px;
+    font-weight: 500;
+    transition: 0.2s;
+}
+
+#add-task-submit:hover {
+    transform: translateY(-1px);
+    background-color: #12fe49;
+}
+
+#update-task-submit:hover {
+    background-color: rgb(170, 177, 143); 
+}
+
+#cancel-edit-btn:hover {
+    background-color: #6c757d; 
+    color: #fff;
 }
 
 .task-item {
@@ -130,7 +146,6 @@ h1, h2, h5 {
     to { opacity: 1; transform: translateY(0); }
 }
 
-/* CALENDAR */
 .calendar {
     display: grid;
     grid-template-columns: repeat(7, 1fr);
@@ -182,7 +197,6 @@ h1, h2, h5 {
     font-weight: bold;
 }
 
-/* PROGRESS */
 .progress {
     height: 24px;
     border-radius: 12px;
@@ -197,7 +211,6 @@ h1, h2, h5 {
     font-weight: bold;
 }
 
-/* FOOTER */
 .footer {
     width: 100%;
     background-color: var(--color-footer-bg);
@@ -207,15 +220,17 @@ h1, h2, h5 {
 .footer a:hover {
     color: var(--color-accent-blue);
 }
-
-/* SPECIAL BUTTONS */
+#logout-btn{
+    transition: transform 0.3s ease; 
+    display: inline-block;
+}
 #logout-btn:hover {
     background-color: var(--color-danger) !important;
     color: #fff !important;
     border-color: var(--color-danger) !important;
+    transform: scale(1.1);
 }
 
-/* RESPONSIVE */
 @media (max-width: 992px) {
     .row > .col-lg-6 { flex: 0 0 100%; max-width: 100%; }
 }
