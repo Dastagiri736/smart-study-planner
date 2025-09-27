@@ -12,29 +12,27 @@
 </head>
 <body class="bg-light">
 
-  <!-- AUTH MODAL -->
   <div class="modal fade" id="auth-modal" tabindex="-1" aria-hidden="true" aria-labelledby="auth-title">
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content p-4">
         <h2 id="auth-title" class="text-center mb-3">🔐 Welcome to Smart Study Planner</h2>
         <div class="mb-3">
           <label for="auth-username" class="form-label">Username</label>
-          <input type="text" id="auth-username" class="form-control" required />
+          <input type="text" type="submit" id="auth-username" class="form-control" required />
         </div>
         <div class="mb-3">
           <label for="auth-password" class="form-label">Password</label>
-          <input type="password" id="auth-password" class="form-control" required />
+          <input type="password" type="submit" id="auth-password" class="form-control" required />
         </div>
         <div class="d-grid gap-2">
-          <button id="login-btn" class="btn btn-success">Login</button>
-          <button id="signup-btn" class="btn btn-primary">Sign Up</button>
+          <button id="login-btn" type="button" class="btn btn-success">Login</button>
+          <button id="signup-btn" type="submit" class="btn btn-primary">Sign Up</button>
         </div>
         <p id="auth-message" class="mt-3 text-center" aria-live="polite"></p>
       </div>
     </div>
   </div>
 
-  <!-- TASK MODAL -->
   <div class="modal fade" id="task-modal" tabindex="-1" aria-hidden="true" aria-labelledby="task-title">
     <div class="modal-dialog">
       <div class="modal-content p-3">
@@ -51,18 +49,16 @@
     </div>
   </div>
 
-  <!-- PLANNER CONTAINER -->
   <div class="container my-4" id="planner-container" style="display:none;">
     <div class="d-flex justify-content-between align-items-center mb-3">
       <h1 class="text-success text-center flex-grow-1">Smart Study Planner</h1>
       <div class="d-flex gap-2">
-        <button id="logout-btn" class="btn btn-outline-danger">🚪 Logout</button>
+        <button id="logout-btn" class="btn btn-outline-danger">⏻Logout</button>
       </div>
     </div>
 
     <div class="text-center mb-3 welcome-message" id="welcome-message" aria-live="polite"></div>
 
-    <!-- TASK FORM -->
     <form id="task-form" class="row g-2 mb-3">
       <input type="hidden" id="editing-task-id" value="" /> 
 
@@ -94,14 +90,14 @@
 
       <div class="col-md-3" id="task-form-actions">
         <label class="form-label">&nbsp;</label>
-        <button type="submit" id="add-task-submit" class="btn btn-success w-100">Add Task</button>
-
+        <button type="submit" id="add-task-submit" class="btn btn-success w-100">Add Task</button> <br><br>
+        <button type="submit" id="update-task-submit" class="btn btn-warning w-100">Update Task</button><br><br>
+        <button type="submit" id="cancel-edit-btn" class="btn btn-secondary w-100">Cancel Edit</button>
         <div id="edit-task-actions" class="d-grid gap-2" style="display: none;">
         </div>
       </div>
     </form>
 
-    <!-- PROGRESS BAR -->
     <div class="mb-3">
       <label for="progress-bar" class="form-label">Progress:</label>
       <div class="progress">
@@ -127,12 +123,10 @@
     </div>
   </div>
 
-  <!-- LOADING SPINNER -->
   <div id="loading-spinner" class="spinner-border text-success position-fixed top-50 start-50 translate-middle" style="display: none;">
     <span class="visually-hidden">Loading...</span>
   </div>
 
-  <!-- TOAST ALERT -->
   <div id="toast-alert" class="toast-container position-fixed bottom-0 end-0 p-3">
     <div id="toast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
       <div class="toast-header">
@@ -148,8 +142,8 @@
 
   <footer class="footer mt-auto py-3 bg-light text-center text-muted" id="main-footer">
     <div class="container">
-      <span>© 2025 Smart Study Planner. All rights reserved.</span><br />
-      <span>Made with ❤️ by Giri</span>
+      <span>© 2025 Smart Study Planner. All rights reserved⚡.</span><br />
+      <span>Made with 😍 by Giri</span>
     </div>
   </footer>
 
