@@ -359,18 +359,18 @@ function renderCalendar(startDate = new Date()) {
         calendarEl.appendChild(dayDiv);
     }
 }
-document.getElementById('prev-week').addEventListener('click',()=>{
-    currentCalendarDate.setDate(currentCalendarDate.getDate() - 7);
-    renderCalendar(currentCalendarDate);
-});
-document.getElementById('next-week').addEventListener('click',()=>{
-    currentCalendarDate.setDate(currentCalendarDate.getDate() + 7);
-    renderCalendar(currentCalendarDate);
-});
-calendarStartDateEl.addEventListener('change',(e)=>{
-    const newDate = new Date(e.target.value);
-    renderCalendar(newDate);
-});
+// document.getElementById('prev-week').addEventListener('click',()=>{
+//     currentCalendarDate.setDate(currentCalendarDate.getDate() - 7);
+//     renderCalendar(currentCalendarDate);
+// });
+// document.getElementById('next-week').addEventListener('click',()=>{
+//     currentCalendarDate.setDate(currentCalendarDate.getDate() + 7);
+//     renderCalendar(currentCalendarDate);
+// });
+// calendarStartDateEl.addEventListener('change',(e)=>{
+//     const newDate = new Date(e.target.value);
+//     renderCalendar(newDate);
+// });
 
 function renderProgress(){
     const totalTasks=tasks.length;
@@ -402,3 +402,4 @@ document.addEventListener('DOMContentLoaded',()=>{
     });
     calendarStartDateEl.addEventListener('change',(e)=>renderCalendar(new Date(e.target.value)));
 });
+
